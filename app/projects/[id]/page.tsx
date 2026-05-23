@@ -83,15 +83,17 @@ export default function ProjectWorkspacePage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 p-8">
+    <main className="min-h-[calc(100vh-73px)] bg-slate-50 p-8 text-slate-900">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-blue-700">
               Workforce Planning MVP
             </p>
-            <h1 className="mt-2 text-3xl font-bold">Project Workspace</h1>
-            <p className="mt-2 text-sm text-slate-600">
+            <h1 className="mt-2 text-4xl font-bold tracking-tight text-slate-950">
+              Project Workspace
+            </h1>
+            <p className="mt-2 text-base text-slate-600">
               Review the selected workforce planning project.
             </p>
           </div>
@@ -99,187 +101,156 @@ export default function ProjectWorkspacePage() {
           <button
             type="button"
             onClick={goToProjects}
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+            className="rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-100"
           >
             Back to Projects
           </button>
         </div>
 
-        {loading && (
-          <div className="rounded-xl bg-white p-6 shadow">
+        {loading ? (
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm text-slate-600">Loading project...</p>
           </div>
-        )}
+        ) : null}
 
-        {!loading && errorMessage && (
-          <div className="rounded-xl bg-red-100 p-4 text-sm text-red-700">
+        {errorMessage ? (
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 shadow-sm">
             {errorMessage}
           </div>
-        )}
+        ) : null}
 
-        {!loading && !errorMessage && project && (
+        {!loading && !errorMessage && project ? (
           <div className="space-y-6">
-            <div className="rounded-xl bg-white p-6 shadow">
-              <h2 className="text-2xl font-semibold">{project.project_name}</h2>
-              <p className="mt-1 text-slate-600">{project.company_name}</p>
+            <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+              <h2 className="text-3xl font-bold tracking-tight text-slate-950">
+                {project.project_name}
+              </h2>
+              <p className="mt-2 text-lg text-slate-700">{project.company_name}</p>
 
-              <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <div>
-                  <p className="text-xs uppercase text-slate-500">Industry</p>
-                  <p className="text-sm text-slate-800">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Industry
+                  </p>
+                  <p className="mt-1 text-lg text-slate-900">
                     {project.industry || "-"}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-xs uppercase text-slate-500">Country</p>
-                  <p className="text-sm text-slate-800">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Country
+                  </p>
+                  <p className="mt-1 text-lg text-slate-900">
                     {project.country || "-"}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-xs uppercase text-slate-500">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                     Planning Horizon
                   </p>
-                  <p className="text-sm text-slate-800">
+                  <p className="mt-1 text-lg text-slate-900">
                     {project.planning_horizon ?? "-"}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-xs uppercase text-slate-500">Currency</p>
-                  <p className="text-sm text-slate-800">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Currency
+                  </p>
+                  <p className="mt-1 text-lg text-slate-900">
                     {project.currency || "-"}
                   </p>
                 </div>
 
                 <div className="sm:col-span-2 lg:col-span-2">
-                  <p className="text-xs uppercase text-slate-500">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                     Business Units
                   </p>
-                  <p className="text-sm text-slate-800">
+                  <p className="mt-1 text-lg text-slate-900">
                     {project.business_units || "-"}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
-              <div className="rounded-xl bg-white p-6 shadow">
-                <h3 className="text-lg font-semibold">Strategic Inputs</h3>
-                <p className="mt-2 text-sm text-slate-600">
-                  Define the business assumptions for this project.
-                </p>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <WorkspaceCard
+                title="Strategic Inputs"
+                description="Define the business assumptions for this project."
+                buttonLabel="Open Strategic Inputs"
+                onClick={goToStrategicInputs}
+              />
 
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    onClick={goToStrategicInputs}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                  >
-                    Open Strategic Inputs
-                  </button>
-                </div>
-              </div>
+              <WorkspaceCard
+                title="Current Workforce Supply"
+                description="Capture current headcount, attrition, productivity, cost, and critical role data."
+                buttonLabel="Open Current Workforce"
+                onClick={goToCurrentWorkforce}
+              />
 
-              <div className="rounded-xl bg-white p-6 shadow">
-                <h3 className="text-lg font-semibold">
-                  Current Workforce Supply
-                </h3>
-                <p className="mt-2 text-sm text-slate-600">
-                  Capture current headcount, attrition, productivity, cost, and
-                  critical role data.
-                </p>
+              <WorkspaceCard
+                title="Future Workforce Demand"
+                description="Define future role requirements, operating model, and leadership demand."
+                buttonLabel="Open Future Demand"
+                onClick={goToFutureDemand}
+              />
 
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    onClick={goToCurrentWorkforce}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                  >
-                    Open Current Workforce
-                  </button>
-                </div>
-              </div>
+              <WorkspaceCard
+                title="Gap Analysis"
+                description="Compare available supply with future demand and view workforce gaps."
+                buttonLabel="Open Gap Analysis"
+                onClick={goToGapAnalysis}
+              />
 
-              <div className="rounded-xl bg-white p-6 shadow">
-                <h3 className="text-lg font-semibold">
-                  Future Workforce Demand
-                </h3>
-                <p className="mt-2 text-sm text-slate-600">
-                  Define future role requirements, operating model, and
-                  leadership demand.
-                </p>
+              <WorkspaceCard
+                title="Scenario Planning"
+                description="Create and compare workforce planning scenarios for this project."
+                buttonLabel="Open Scenario Planning"
+                onClick={goToScenarioPlanning}
+              />
 
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    onClick={goToFutureDemand}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                  >
-                    Open Future Demand
-                  </button>
-                </div>
-              </div>
-
-              <div className="rounded-xl bg-white p-6 shadow">
-                <h3 className="text-lg font-semibold">Gap Analysis</h3>
-                <p className="mt-2 text-sm text-slate-600">
-                  Compare available supply with future demand and view workforce
-                  gaps.
-                </p>
-
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    onClick={goToGapAnalysis}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                  >
-                    Open Gap Analysis
-                  </button>
-                </div>
-              </div>
-
-              <div className="rounded-xl bg-white p-6 shadow">
-                <h3 className="text-lg font-semibold">Scenario Planning</h3>
-                <p className="mt-2 text-sm text-slate-600">
-                  Create and compare workforce planning scenarios for this
-                  project.
-                </p>
-
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    onClick={goToScenarioPlanning}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                  >
-                    Open Scenario Planning
-                  </button>
-                </div>
-              </div>
-
-              <div className="rounded-xl bg-white p-6 shadow">
-                <h3 className="text-lg font-semibold">Workforce Dashboard</h3>
-                <p className="mt-2 text-sm text-slate-600">
-                  View workforce supply, demand, gaps, cost, and scenario
-                  summary metrics.
-                </p>
-
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    onClick={goToDashboard}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                  >
-                    Open Workforce Dashboard
-                  </button>
-                </div>
-              </div>
+              <WorkspaceCard
+                title="Workforce Dashboard"
+                description="View workforce supply, demand, gaps, cost, and scenario summary metrics."
+                buttonLabel="Open Workforce Dashboard"
+                onClick={goToDashboard}
+              />
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </main>
+  );
+}
+
+function WorkspaceCard({
+  title,
+  description,
+  buttonLabel,
+  onClick,
+}: {
+  title: string;
+  description: string;
+  buttonLabel: string;
+  onClick: () => void;
+}) {
+  return (
+    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h3 className="text-2xl font-bold tracking-tight text-slate-950">{title}</h3>
+      <p className="mt-3 min-h-[96px] text-base leading-7 text-slate-700">
+        {description}
+      </p>
+      <div className="mt-6">
+        <button
+          type="button"
+          onClick={onClick}
+          className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-blue-700"
+        >
+          {buttonLabel}
+        </button>
+      </div>
+    </div>
   );
 }
