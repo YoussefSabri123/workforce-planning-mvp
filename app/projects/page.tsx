@@ -53,24 +53,15 @@ export default function ProjectsPage() {
   };
 
   const handleDelete = async (projectId: string, projectName: string) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete the project "${projectName}"?`
-    );
-
-    if (!confirmed) {
-      return;
-    }
+    const confirmed = window.confirm(`هل أنت متأكد من حذف المشروع "${projectName}"؟`);
+    if (!confirmed) return;
 
     setMessage("");
     setErrorMessage("");
     setDeletingId(projectId);
 
     const supabase = createClient();
-
-    const { error } = await supabase
-      .from("projects")
-      .delete()
-      .eq("id", projectId);
+    const { error } = await supabase.from("projects").delete().eq("id", projectId);
 
     if (error) {
       setErrorMessage(error.message);
@@ -78,23 +69,19 @@ export default function ProjectsPage() {
       return;
     }
 
-    setMessage("Project deleted successfully.");
+    setMessage("تم حذف المشروع بنجاح.");
     await loadProjects();
     setDeletingId(null);
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 p-8">
+    <main className="min-h-[calc(100vh-73px)] bg-slate-50 p-8 text-slate-900">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-blue-700">
-              Workforce Planning MVP
-            </p>
-            <h1 className="mt-2 text-3xl font-bold">Projects</h1>
-            <p className="mt-2 text-sm text-slate-600">
-              View, open, and manage your workforce planning projects.
-            </p>
+          <div className="text-right">
+            <p className="text-sm font-medium text-blue-700">منصة تخطيط القوى العاملة</p>
+            <h1 className="mt-2 text-3xl font-bold text-slate-950">المشاريع</h1>
+            <p className="mt-2 text-sm text-slate-600">عرض المشاريع وفتحها وإدارتها.</p>
           </div>
 
           <button
@@ -102,108 +89,68 @@ export default function ProjectsPage() {
             onClick={goToNewProject}
             className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
           >
-            New Project
+            مشروع جديد
           </button>
         </div>
 
-        {message ? (
-          <div className="mb-4 rounded-xl bg-green-100 p-4 text-sm text-green-700">
-            {message}
-          </div>
-        ) : null}
-
-        {loading ? (
-          <div className="rounded-xl bg-white p-6 shadow">
-            <p className="text-sm text-slate-600">Loading projects...</p>
-          </div>
-        ) : null}
-
-        {errorMessage ? (
-          <div className="rounded-xl bg-red-100 p-4 text-sm text-red-700">
-            {errorMessage}
-          </div>
-        ) : null}
+        {message ? <div className="mb-4 rounded-xl bg-green-100 p-4 text-sm text-green-700">{message}</div> : null}
+        {loading ? <div className="rounded-xl bg-white p-6 shadow"><p className="text-sm text-slate-600">جارٍ تحميل المشاريع...</p></div> : null}
+        {errorMessage ? <div className="rounded-xl bg-red-100 p-4 text-sm text-red-700">{errorMessage}</div> : null}
 
         {!loading && !errorMessage && projects.length === 0 ? (
-          <div className="rounded-xl bg-white p-6 shadow">
-            <h2 className="text-lg font-semibold">No projects yet</h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Create your first workforce planning project to get started.
-            </p>
+          <div className="rounded-xl bg-white p-6 shadow text-right">
+            <h2 className="text-lg font-semibold">لا توجد مشاريع بعد</h2>
+            <p className="mt-2 text-sm text-slate-600">أنشئ أول مشروع تخطيط قوى عاملة للبدء.</p>
           </div>
         ) : null}
 
         {!loading && !errorMessage && projects.length > 0 ? (
           <div className="grid gap-4">
             {projects.map((project) => (
-              <div key={project.id} className="rounded-xl bg-white p-5 shadow">
+              <div key={project.id} className="rounded-xl bg-white p-5 shadow text-right">
                 <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h2 className="text-xl font-semibold">
-                      {project.project_name}
-                    </h2>
-                    <p className="mt-1 text-sm text-slate-600">
-                      {project.company_name}
-                    </p>
-                  </div>
-
                   <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={() => openProject(project.id)}
                       className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                     >
-                      Open
+                      فتح
                     </button>
 
                     <button
                       type="button"
-                      onClick={() =>
-                        handleDelete(project.id, project.project_name)
-                      }
+                      onClick={() => handleDelete(project.id, project.project_name)}
                       disabled={deletingId === project.id}
-                      style={{
-                        backgroundColor: "#dc2626",
-                        color: "#ffffff",
-                        border: "1px solid #b91c1c",
-                        minHeight: "42px",
-                      }}
+                      style={{ backgroundColor: '#dc2626', color: '#ffffff', border: '1px solid #b91c1c', minHeight: '42px' }}
                       className="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {deletingId === project.id ? "Deleting..." : "Delete"}
+                      {deletingId === project.id ? 'جارٍ الحذف...' : 'حذف'}
                     </button>
+                  </div>
+
+                  <div>
+                    <h2 className="text-xl font-semibold text-slate-950">{project.project_name}</h2>
+                    <p className="mt-1 text-sm text-slate-600">{project.company_name}</p>
                   </div>
                 </div>
 
                 <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                   <div>
-                    <p className="text-xs uppercase text-slate-500">Industry</p>
-                    <p className="text-sm text-slate-800">
-                      {project.industry || "-"}
-                    </p>
+                    <p className="text-xs uppercase text-slate-500">القطاع</p>
+                    <p className="text-sm text-slate-800">{project.industry || '-'}</p>
                   </div>
-
                   <div>
-                    <p className="text-xs uppercase text-slate-500">Country</p>
-                    <p className="text-sm text-slate-800">
-                      {project.country || "-"}
-                    </p>
+                    <p className="text-xs uppercase text-slate-500">الدولة</p>
+                    <p className="text-sm text-slate-800">{project.country || '-'}</p>
                   </div>
-
                   <div>
-                    <p className="text-xs uppercase text-slate-500">
-                      Planning Horizon
-                    </p>
-                    <p className="text-sm text-slate-800">
-                      {project.planning_horizon ?? "-"}
-                    </p>
+                    <p className="text-xs uppercase text-slate-500">أفق التخطيط</p>
+                    <p className="text-sm text-slate-800">{project.planning_horizon ?? '-'}</p>
                   </div>
-
                   <div>
-                    <p className="text-xs uppercase text-slate-500">Currency</p>
-                    <p className="text-sm text-slate-800">
-                      {project.currency || "-"}
-                    </p>
+                    <p className="text-xs uppercase text-slate-500">العملة</p>
+                    <p className="text-sm text-slate-800">{project.currency || '-'}</p>
                   </div>
                 </div>
               </div>
